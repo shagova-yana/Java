@@ -1,5 +1,4 @@
-import com.company.AddressBook;
-import com.sun.xml.internal.ws.developer.MemberSubmissionEndpointReference;
+import com.company.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,8 +10,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AddressBookTest {
 
-    public boolean compareMap(Map<String, new Address()> actual,
-                          Map<String, new MemberSubmissionEndpointReference.Address> extended) {
+    public boolean compareMap(Map<String, Address> actual,
+                          Map<String, Address> extended) {
         return actual.entrySet().containsAll(extended.entrySet())
                 && extended.entrySet().containsAll(actual.entrySet());
 
@@ -20,7 +19,6 @@ class AddressBookTest {
     AddressBook book = new AddressBook();
     @BeforeEach
     void setUp() {
-
         book.addAddressPerson("Смирнов", "Кантемировская", "8", "512" );
         book.addAddressPerson("Иванов", "Малая Конюшенная", "5", "65" );
         book.addAddressPerson("Шмакова", "Кантемировская", "17", "12" );
@@ -63,12 +61,12 @@ class AddressBookTest {
 
     @Test
     void getPersonToStreet() throws MalformedURLException {
-        Map<String, Ad> extend = new HashMap<>();
-        IiopUrl.Address address = new IiopUrl.Address();
-        address.
-
-        extend.put("Смирнов", );
-        compareMap()
+        Map<String, Address> extend = new HashMap<>();
+        Address address1 = new Address("Кантемировская", "8", "512");
+        Address address2 = new Address("Кантемировская", "17", "12");
+        extend.put("Смирнов", address1);
+        extend.put("Шмакова", address2);
+        assertTrue(compareMap(extend, book.getPersonToStreet("Кантемировская")));
     }
 
     @Test

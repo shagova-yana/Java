@@ -4,47 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.*;
 
-class Address {
-    private String street;
-    private String home;
-    private String room;
 
-    public Address(String street, String home, String room) {
-        this.street = street;
-        this.home = home;
-        this.room = room;
-    }
-
-    public String getHome() {
-        return home;
-    }
-    public String getRoom() {
-        return room;
-    }
-    public String getStreet() {
-        return street;
-    }
-    public void setStreet(String street) {
-        this.street = street;
-    }
-    public void setHome(String home) {
-        int h = Integer.parseInt(home.trim());
-        if (h > 0)
-            this.home = home;
-        else throw new NumberFormatException();
-    }
-    public void setRoom(String room) {
-        int r = Integer.parseInt(room.trim());
-        if (r > 0)
-            this.room = room;
-        else throw new NumberFormatException();
-    }
-}
 
 public class AddressBook  {
     private Map<String, Address> book;
-     public AddressBook() {
-        book = new HashMap<String, Address>();
+    public AddressBook() {
+        book = new HashMap<>();
     }
 
     public boolean addAddressPerson(String Person, String Street, String Home, String Room) {
