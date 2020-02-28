@@ -1,10 +1,6 @@
 package com.company;
 
-import com.sun.jndi.cosnaming.IiopUrl;
-
-import java.net.MalformedURLException;
-
-public class Address extends IiopUrl.Address {
+public class Address {
     private String street;
     private String home;
     private String room;
