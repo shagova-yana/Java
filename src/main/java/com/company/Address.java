@@ -42,10 +42,8 @@ public class Address {
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-
         if (obj == null || getClass() != obj.getClass())
             return false;
-
         Address address = (Address) obj;
         return street.equals(address.street) &&
                 home == address.home &&

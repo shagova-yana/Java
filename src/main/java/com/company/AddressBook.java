@@ -1,7 +1,6 @@
 package com.company;
 
 import java.util.*;
-import java.lang.RuntimeException;
 
 public class AddressBook  {
     private Map<String, Address> book;
@@ -47,7 +46,7 @@ public class AddressBook  {
         for (String key : book.keySet())
             if (book.get(key).getStreet().equals(street))
                 map.put(key, book.get(key));
-        if (map.size() == 0) throw new IllegalArgumentException();
+        if (map.size() == 0) throw new IllegalArgumentException("Данная улица не содержится в телефонной книге");
         else return map;
     }
 
@@ -56,19 +55,16 @@ public class AddressBook  {
         for (String key : book.keySet())
             if (book.get(key).getStreet().equals(street) && book.get(key).getHome() == home)
                 map.put(key, book.get(key));
-            System.out.println(map);
-        if (map.size() == 0) throw new IllegalArgumentException();
-        else return map;
+        if (map.size() > 0)  return map;
+        else throw new IllegalArgumentException();
     }
 
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-
         if (obj == null || getClass() != obj.getClass())
             return false;
-
         AddressBook addressBook = (AddressBook) obj;
         return person.equals(addressBook.getName()) &&
                 book.get(person).getStreet().equals(addressBook.getAddress(addressBook.getName()).getStreet()) &&
@@ -84,9 +80,7 @@ public class AddressBook  {
     @Override
     public int hashCode() {
         int result = person.hashCode();
-        result = 31 * result + book.get(person).getStreet().hashCode();
-        result = 31 * result + book.get(person).getHome();
-        result = 31 * result + book.get(person).getRoom();
+        result = 31 * result + book.get(person).hashCode();
         return result;
     }
 }
