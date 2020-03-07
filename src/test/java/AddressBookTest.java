@@ -7,20 +7,45 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AddressBookTest {
 
-    boolean equalsAddress(Address actual, Address extend, int f) {
-        if (f == 0)
-            return actual.getStreet().equals(extend.getStreet())
-                && Objects.equals(actual.getHome(), extend.getHome())
-                && actual.getRoom().equals(extend.getRoom());
-        if (f == 1)
-            return actual.getStreet().equals(extend.getStreet());
-        if (f == 2)
-            return actual.getStreet().equals(extend.getStreet())
-                    && Objects.equals(actual.getHome(), extend.getHome());
-        return false;
-    }
+    /* private enum equalsAddress {
+         ADDRESS{
+             public boolean equals(Address actual, Address extend){
+                 return actual.getStreet().equals(extend.getStreet())
+                         && Objects.equals(actual.getHome(), extend.getHome())
+                         && actual.getRoom() == extend.getRoom();
+             }
+         },
+         STREET{
+             public boolean equals(Address actual, Address extend){
+                 return actual.getStreet().equals(extend.getStreet());
+             }
+         },
+         HOME{
+             public boolean equals(Address actual, Address extend){
+                 return actual.getStreet().equals(extend.getStreet())
+                         && actual.getHome() == extend.getHome();
+             }
+         };
+         private int name;
+         public equalsAddress(int n) {
+             this.name
+         }
+     }
+  */
+     public boolean equalsAddress(Address actual, Address extend, int f) {
+         if (f == 0)
+             return actual.getStreet().equals(extend.getStreet())
+                 && Objects.equals(actual.getHome(), extend.getHome())
+                 && actual.getRoom() == extend.getRoom();
+         if (f == 1)
+             return actual.getStreet().equals(extend.getStreet());
+         if (f == 2)
+             return actual.getStreet().equals(extend.getStreet())
+                     && Objects.equals(actual.getHome(), extend.getHome());
+         return false;
+     }
 
-    boolean compareMap(Map<String, Address> actual, Map<String, Address> extended, int f) {
+    public boolean compareMap(Map<String, Address> actual, Map<String, Address> extended, int f) {
         if (actual.size() != extended.size()) return false;
         int count = 0;
         for (String key : actual.keySet()){
@@ -33,23 +58,24 @@ class AddressBookTest {
     AddressBook book = new AddressBook();
     @BeforeEach
     void setUp() {
-        book.addAddressPerson("Смирнов", "Кантемировская", "8", "512" );
-        book.addAddressPerson("Иванов", "Малая Конюшенная", "5", "65" );
-        book.addAddressPerson("Шмакова", "Кантемировская", "17", "12" );
-        book.addAddressPerson("Агафонов", "Большая Пушкарская", "45", "10" );
-        book.addAddressPerson("Туранова", "Садовая", "8", "25" );
-        book.addAddressPerson("Поляков", "Хлопина", "16", "53" );
-        book.addAddressPerson("Швалов", "Садовая", "8", "86" );
+        book.addAddressPerson("Смирнов", "Кантемировская", 8, 512 );
+        book.addAddressPerson("Иванов", "Малая Конюшенная", 5, 65 );
+        book.addAddressPerson("Шмакова", "Кантемировская", 17, 12 );
+        book.addAddressPerson("Агафонов", "Большая Пушкарская", 45, 10 );
+        book.addAddressPerson("Туранова", "Садовая", 8, 5);
+        book.addAddressPerson("Поляков", "Хлопина", 16, 53 );
+        book.addAddressPerson("Швалов", "Садовая", 8, 86 );
     }
 
     @Test
     void addAddressPerson() {
-        assertTrue(book.addAddressPerson("Смирнов", "Кантемировская", "8", "512" ));
-        assertTrue(book.addAddressPerson("Иванов", "Малая Конюшенная", "5", "65" ));
-        assertTrue(book.addAddressPerson("Шмакова", "Кантемировская", "17", "12" ));
-        assertTrue(book.addAddressPerson("Агафонов", "Большая Пушкарская", "45", "10" ));
-        assertTrue(book.addAddressPerson("Туранова", "Садовая", "8", "25" ));
-        assertTrue(book.addAddressPerson("Поляков", "Хлопина", "16", "53" ));
+        assertTrue(book.addAddressPerson("Смирнова", "Кантемировская", 8, 512 ));
+        assertTrue(book.addAddressPerson("Инов", "Малая Морская", 5, 89 ));
+        assertTrue(book.addAddressPerson("Фетисов", "Харченко", 16, 418));
+        assertTrue(book.addAddressPerson("Логвинов", "Большая Морская", 49, 50 ));
+        assertFalse(book.addAddressPerson("Туранова", "Садовая", 8, 25 ));
+        assertFalse(book.addAddressPerson("Поляков", "Хлопина", 16, 35 ));
+
     }
 
     @Test
@@ -61,37 +87,39 @@ class AddressBookTest {
 
     @Test
     void changeAddressPerson() {
-        assertTrue(book.changeAddressPerson("Смирнов", "Большая Пушкарская", "78", "52" ));
-        assertTrue(book.changeAddressPerson("Иванов", "Кантемировская", "54", "5"));
-        assertFalse(book.changeAddressPerson("Шагова", "Кантемировская", "54", "5"));
+        assertTrue(book.changeAddressPerson("Смирнов", "Большая Пушкарская", 78, 52 ));
+        assertTrue(book.changeAddressPerson("Иванов", "Кантемировская", 54, 5));
+        assertFalse(book.changeAddressPerson("Шагова", "Кантемировская", 54, 5));
     }
 
     @Test
     void getAddress() {
-        assertTrue(equalsAddress(new Address("Садовая", "8", "25"), book.getAddress("Туранова"), 0));
-        assertTrue(equalsAddress(new Address("Большая Пушкарская", "45", "10"), book.getAddress("Агафонов"), 0));
-        assertFalse(equalsAddress(new Address("Большая Пушкарская", "45", "10"), book.getAddress("Иванов"), 0));
+        assertTrue(equalsAddress(new Address("Садовая", 8, 5), book.getAddress("Туранова"), 0));
+        assertTrue(equalsAddress(new Address("Большая Пушкарская", 45, 10), book.getAddress("Агафонов"), 0));
+        assertFalse(equalsAddress(new Address("Большая Пушкарская", 45, 10), book.getAddress("Иванов"), 0));
         assertNull(book.getAddress("Шагова"));
     }
 
     @Test
     void getPersonToStreet() {
         Map<String, Address> extend = new HashMap<>();
-        Address address1 = new Address("Кантемировская", "8", "512");
-        Address address2 = new Address("Кантемировская", "17", "12");
+        Address address1 = new Address("Кантемировская", 8, 512);
+        Address address2 = new Address("Кантемировская", 17, 12);
         extend.put("Смирнов", address1);
         extend.put("Шмакова", address2);
         assertTrue(compareMap(extend, book.getPersonToStreet("Кантемировская"), 1));
+        assertNotEquals(new IllegalArgumentException(), book.getPersonToStreet("Хлопина"));
 
     }
 
     @Test
     void getPersonToHome() {
         Map<String, Address> extend = new HashMap<>();
-        Address address1 = new Address("Садовая", "8", "25");
-        Address address2 = new Address("Садовая", "8", "86");
+        Address address1 = new Address("Садовая", 8, 25);
+        Address address2 = new Address("Садовая", 8, 86);
         extend.put("Туранова", address1);
         extend.put("Швалов", address2);
-        assertTrue(compareMap(extend, book.getPersonToHome("Садовая", "8"), 2));
+        assertTrue(compareMap(extend, book.getPersonToHome("Садовая", 8), 2));
+        assertNotEquals(new IllegalArgumentException(), book.getPersonToHome("Хлопина", 8));
     }
 }

@@ -2,37 +2,53 @@ package com.company;
 
 public class Address {
     private String street;
-    private String home;
-    private String room;
+    private int home;
+    private int room;
 
-    public Address(String street, String home, String room) {
+    public Address(String street, int home, int room) {
         this.street = street;
+        if (home > 0)
         this.home = home;
-        this.room = room;
+        else throw new NumberFormatException();
+        if (room > 0)
+            this.room = room;
+        else throw new NumberFormatException();
     }
 
-    public String getHome() {
+    public int getHome() {
         return home;
     }
-    public String getRoom() {
+    public int getRoom() {
         return room;
     }
     public String getStreet() {
         return street;
     }
-    public void setStreet(String street) {
-        this.street = street;
+
+    @Override
+    public String toString() {
+        return " st. " + street + " h." + home + " r." + room;
     }
-    public void setHome(String home) {
-        int h = Integer.parseInt(home.trim());
-        if (h > 0)
-            this.home = home;
-        else throw new NumberFormatException();
+
+    @Override
+    public int hashCode() {
+        int result = street.hashCode();
+        result = 31 * result + home;
+        result = 31 * result + room;
+        return result;
     }
-    public void setRoom(String room) {
-        int r = Integer.parseInt(room.trim());
-        if (r > 0)
-            this.room = room;
-        else throw new NumberFormatException();
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+
+        Address address = (Address) obj;
+        return street.equals(address.street) &&
+                home == address.home &&
+                room == address.room;
     }
 }
