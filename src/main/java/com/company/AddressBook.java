@@ -4,11 +4,10 @@ import java.util.*;
 
 public class AddressBook  {
     private Map<String, Address> book;
-    private  String person;
     public AddressBook() {
         book = new HashMap<>();
     }
-    public String getName(){return this.person;}
+    private Set<String> getName(){return book.keySet();}
 
     public boolean addAddressPerson(String person, String street, int home, int room) {
         if (book.containsKey(person)) return false;
@@ -66,21 +65,32 @@ public class AddressBook  {
         if (obj == null || getClass() != obj.getClass())
             return false;
         AddressBook addressBook = (AddressBook) obj;
-        return person.equals(addressBook.getName()) &&
-                book.get(person).getStreet().equals(addressBook.getAddress(addressBook.getName()).getStreet()) &&
-                book.get(person).getHome() == addressBook.getAddress(addressBook.getName()).getHome() &&
-                book.get(person).getRoom() == addressBook.getAddress(addressBook.getName()).getRoom();
+        int count = 0;
+        for (String key : book.keySet())
+            for (String keys : addressBook.getName())
+                if (key.equals(keys) && book.get(key).getStreet().equals(addressBook.getAddress(keys).getStreet())
+                && book.get(key).getHome() == addressBook.getAddress(keys).getHome()
+                && book.get(key).getRoom() == addressBook.getAddress(keys).getRoom())
+                    count++;
+        return count == book.size();
     }
 
     @Override
     public String toString() {
-        return person + " " + book.get(person).toString();
+        StringBuilder str = new StringBuilder();
+        for (String key : book.keySet()) {
+            str.append(key);
+            str.append(book.get(key).toString());
+            str.append("\n");
+     }
+        return str.toString();
     }
 
     @Override
     public int hashCode() {
-        int result = person.hashCode();
-        result = 31 * result + book.get(person).hashCode();
+        int result = 0;
+        for (String key : book.keySet())
+            result = 31 * result + key.hashCode() + book.get(key).hashCode();
         return result;
     }
 }

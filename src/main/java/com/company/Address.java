@@ -8,7 +8,7 @@ public class Address {
     public Address(String street, int home, int room) {
         this.street = street;
         if (home > 0)
-        this.home = home;
+            this.home = home;
         else throw new NumberFormatException();
         if (room > 0)
             this.room = room;

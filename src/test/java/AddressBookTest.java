@@ -4,20 +4,22 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AddressBookTest {
-     public boolean equalsAddress(Address actual, Address extend, int f) {
-         if (f == 0)
-             return actual.getStreet().equals(extend.getStreet())
-                 && Objects.equals(actual.getHome(), extend.getHome())
-                 && actual.getRoom() == extend.getRoom();
-         if (f == 1)
-             return actual.getStreet().equals(extend.getStreet());
-         if (f == 2)
-             return actual.getStreet().equals(extend.getStreet())
-                     && Objects.equals(actual.getHome(), extend.getHome());
-         return false;
-     }
+     enum EqualsAddress{
+         FULL, STREET, HOME;
+    }
+      boolean equalsAddress(Address actual, Address extend, EqualsAddress f) {
+         if (f == EqualsAddress.FULL)  return actual.getStreet().equals(extend.getStreet())
+                  && Objects.equals(actual.getHome(), extend.getHome())
+                  && actual.getRoom() == extend.getRoom();
+          if (f == EqualsAddress.STREET)
+              return actual.getStreet().equals(extend.getStreet());
+          if (f == EqualsAddress.HOME)
+              return actual.getStreet().equals(extend.getStreet())
+                      && Objects.equals(actual.getHome(), extend.getHome());
+          return false;
+      }
 
-    public boolean compareMap(Map<String, Address> actual, Map<String, Address> extended, int f) {
+     boolean compareMap(Map<String, Address> actual, Map<String, Address> extended, EqualsAddress f) {
         if (actual.size() != extended.size()) return false;
         int count = 0;
         for (String key : actual.keySet()){
@@ -65,9 +67,9 @@ class AddressBookTest {
 
     @Test
     void getAddress() {
-        assertTrue(equalsAddress(new Address("Садовая", 8, 5), book.getAddress("Туранова"), 0));
-        assertTrue(equalsAddress(new Address("Большая Пушкарская", 45, 10), book.getAddress("Агафонов"), 0));
-        assertFalse(equalsAddress(new Address("Большая Пушкарская", 45, 10), book.getAddress("Иванов"), 0));
+        assertTrue(equalsAddress(new Address("Садовая", 8, 5), book.getAddress("Туранова"), EqualsAddress.FULL));
+        assertTrue(equalsAddress(new Address("Большая Пушкарская", 45, 10), book.getAddress("Агафонов"), EqualsAddress.FULL));
+        assertFalse(equalsAddress(new Address("Большая Пушкарская", 45, 10), book.getAddress("Иванов"), EqualsAddress.FULL));
         assertNull(book.getAddress("Шагова"));
     }
 
@@ -78,10 +80,10 @@ class AddressBookTest {
         Address address2 = new Address("Кантемировская", 17, 12);
         extend.put("Смирнов", address1);
         extend.put("Шмакова", address2);
-        assertTrue(compareMap(extend, book.getPersonToStreet("Кантемировская"), 1));
+        assertTrue(compareMap(extend, book.getPersonToStreet("Кантемировская"), EqualsAddress.STREET));
         try {
             extend.clear();
-            assertTrue(compareMap(extend, book.getPersonToStreet("Гжатская"), 1));
+            assertTrue(compareMap(extend, book.getPersonToStreet("Гжатская"), EqualsAddress.STREET));
         }
         catch (IllegalArgumentException e){
             System.out.println("Данная улица не содержится в телефонной книге");
@@ -95,19 +97,41 @@ class AddressBookTest {
         Address address2 = new Address("Садовая", 8, 86);
         extend.put("Туранова", address1);
         extend.put("Швалов", address2);
-        assertTrue(compareMap(extend, book.getPersonToHome("Садовая", 8), 2));
+        assertTrue(compareMap(extend, book.getPersonToHome("Садовая", 8), EqualsAddress.HOME));
         extend.clear();
         try {
-            assertTrue(compareMap(extend, book.getPersonToHome("Садовая", 14), 2));
+            assertTrue(compareMap(extend, book.getPersonToHome("Садовая", 14), EqualsAddress.HOME));
         }
         catch (IllegalArgumentException e){
             System.out.println("Данного дома нет в телефонной книге");
         }
         try {
-            assertTrue(compareMap(extend, book.getPersonToHome("Хлопина", 14), 2));
+            assertTrue(compareMap(extend, book.getPersonToHome("Хлопина", 14), EqualsAddress.HOME));
         }
         catch (IllegalArgumentException e){
             System.out.println("Данного дома и улицы нет в телефонной книге");
         }
+    }
+
+    @Test
+    void equals(){
+        AddressBook first = new AddressBook();
+        first.addAddressPerson("Смирнов", "Кантемировская", 8, 512 );
+        first.addAddressPerson("Иванов", "Малая Конюшенная", 5, 65 );
+        first.addAddressPerson("Шмакова", "Кантемировская", 17, 12 );
+        first.addAddressPerson("Агафонов", "Большая Пушкарская", 45, 10 );
+        first.addAddressPerson("Туранова", "Садовая", 8, 5);
+        first.addAddressPerson("Поляков", "Хлопина", 16, 53 );
+        first.addAddressPerson("Швалов", "Садовая", 8, 86 );
+        assertTrue(book.equals(first));
+        assertEquals(book.hashCode(), first.hashCode());
+        first.deletePerson("Смирнов");
+        assertFalse(book.equals(first));
+        first.changeAddressPerson("Иванов","Кантемировская", 17, 12 );
+        assertTrue(first.getAddress("Иванов").equals(first.getAddress("Шмакова")));
+        assertFalse(first.getAddress("Поляков").equals(first.getAddress("Шмакова")));
+        assertEquals(first.getAddress("Иванов").hashCode(), first.getAddress("Шмакова").hashCode());
+        System.out.println(first.toString());
+        System.out.println(book.getAddress("Туранова").toString());
     }
 }
