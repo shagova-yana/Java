@@ -81,13 +81,8 @@ class AddressBookTest {
         extend.put("Смирнов", address1);
         extend.put("Шмакова", address2);
         assertTrue(compareMap(extend, book.getPersonToStreet("Кантемировская"), EqualsAddress.STREET));
-        try {
-            extend.clear();
-            assertTrue(compareMap(extend, book.getPersonToStreet("Гжатская"), EqualsAddress.STREET));
-        }
-        catch (IllegalArgumentException e){
-            System.out.println("Данная улица не содержится в телефонной книге");
-        }
+        extend.clear();
+        assertThrows(IllegalArgumentException.class, () -> book.getPersonToStreet("Гжатская"));
     }
 
     @Test
@@ -99,19 +94,9 @@ class AddressBookTest {
         extend.put("Швалов", address2);
         assertTrue(compareMap(extend, book.getPersonToHome("Садовая", 8), EqualsAddress.HOME));
         extend.clear();
-        try {
-            assertTrue(compareMap(extend, book.getPersonToHome("Садовая", 14), EqualsAddress.HOME));
-        }
-        catch (IllegalArgumentException e){
-            System.out.println("Данного дома нет в телефонной книге");
-        }
-        try {
-            assertTrue(compareMap(extend, book.getPersonToHome("Хлопина", 14), EqualsAddress.HOME));
-        }
-        catch (IllegalArgumentException e){
-            System.out.println("Данного дома и улицы нет в телефонной книге");
-        }
+        assertThrows(IllegalArgumentException.class, () -> book.getPersonToHome("Садовая", 15));
     }
+
 
     @Test
     void equals(){
@@ -125,13 +110,11 @@ class AddressBookTest {
         first.addAddressPerson("Швалов", "Садовая", 8, 86 );
         assertTrue(book.equals(first));
         assertEquals(book.hashCode(), first.hashCode());
-        first.deletePerson("Смирнов");
+        first.addAddressPerson("Смирнова", "Малая Конюшенная", 5, 65 );
         assertFalse(book.equals(first));
         first.changeAddressPerson("Иванов","Кантемировская", 17, 12 );
         assertTrue(first.getAddress("Иванов").equals(first.getAddress("Шмакова")));
         assertFalse(first.getAddress("Поляков").equals(first.getAddress("Шмакова")));
         assertEquals(first.getAddress("Иванов").hashCode(), first.getAddress("Шмакова").hashCode());
-        System.out.println(first.toString());
-        System.out.println(book.getAddress("Туранова").toString());
     }
 }

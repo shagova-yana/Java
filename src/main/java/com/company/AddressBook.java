@@ -14,15 +14,16 @@ public class AddressBook  {
         else {
             Address address = new Address(street, home, room);
             book.put(person, address);
+            return true;
         }
-        return book.containsKey(person);
     }
 
     public boolean deletePerson(String person) {
-        if (book.containsKey(person))
+        if (book.containsKey(person)) {
             book.remove(person);
+            return true;
+        }
         else return false;
-        return !book.containsKey(person);
     }
 
     public boolean changeAddressPerson(String person, String street, int home, int room) {
@@ -35,9 +36,7 @@ public class AddressBook  {
     }
 
     public Address getAddress(String person) {
-        if (book.containsKey(person))
             return book.get(person);
-        return null;
     }
 
     public Map<String, Address> getPersonToStreet(String street) {
@@ -68,11 +67,9 @@ public class AddressBook  {
         int count = 0;
         for (String key : book.keySet())
             for (String keys : addressBook.getName())
-                if (key.equals(keys) && book.get(key).getStreet().equals(addressBook.getAddress(keys).getStreet())
-                && book.get(key).getHome() == addressBook.getAddress(keys).getHome()
-                && book.get(key).getRoom() == addressBook.getAddress(keys).getRoom())
+                if (key.equals(keys) && book.get(key).equals(addressBook.getAddress(keys)))
                     count++;
-        return count == book.size();
+        return count == book.size() && count == addressBook.getName().size();
     }
 
     @Override
@@ -81,7 +78,7 @@ public class AddressBook  {
         for (String key : book.keySet()) {
             str.append(key);
             str.append(book.get(key).toString());
-            str.append("\n");
+            System.lineSeparator();
      }
         return str.toString();
     }
